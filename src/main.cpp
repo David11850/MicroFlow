@@ -6,7 +6,7 @@ int main() {
     // 【步骤 1】打开文件
     // 目的：将硬盘上的 mnist.mflow 以二进制流的方式连接到程序中
     // 知识点：std::ios::binary 告诉 C++ 不要把文件当文本读，要原封不动读字节
-    std::ifstream file("mnist.mflow", std::ios::binary);
+    std::ifstream file("../model/mnist.mflow", std::ios::binary);
 
     if (!file.is_open()) {
         std::cerr << "错误：找不到模型文件 mnist.mflow！" << std::endl;

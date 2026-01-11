@@ -1,0 +1,8 @@
+/home/michael/code/microflow_project/build/CMakeFiles/microflow_core.dir
+/home/michael/code/microflow_project/build/CMakeFiles/test_tensor.dir
+/home/michael/code/microflow_project/build/CMakeFiles/test_gemm.dir
+/home/michael/code/microflow_project/build/CMakeFiles/benchmark_gemm.dir
+/home/michael/code/microflow_project/build/CMakeFiles/test_conv.dir
+/home/michael/code/microflow_project/build/CMakeFiles/test_mnist_mock.dir
+/home/michael/code/microflow_project/build/CMakeFiles/edit_cache.dir
+/home/michael/code/microflow_project/build/CMakeFiles/rebuild_cache.dir

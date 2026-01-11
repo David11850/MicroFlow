@@ -1,0 +1,105 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "MicroFlow",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "benchmark_gemm::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-benchmark_gemm-Debug-5072a6b8ddf081e53596.json",
+					"name" : "benchmark_gemm",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "microflow_core::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-microflow_core-Debug-019bd1966e259fac8d21.json",
+					"name" : "microflow_core",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_conv::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_conv-Debug-0e491cf91ec620add594.json",
+					"name" : "test_conv",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_gemm::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_gemm-Debug-6bcdd2394766e263290f.json",
+					"name" : "test_gemm",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_mnist_mock::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_mnist_mock-Debug-3993e5a1865f31708917.json",
+					"name" : "test_mnist_mock",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_tensor::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_tensor-Debug-d473baf01dd77c85eb14.json",
+					"name" : "test_tensor",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/michael/code/microflow_project/build",
+		"source" : "/home/michael/code/microflow_project"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}
