@@ -28,6 +28,36 @@ Tensor::Tensor(const std::vector<uint32_t>& shapes)
     }
 }
 
+// ---------------------------------------------------------
+// [新增实现] Zero-Copy 构造函数
+// ---------------------------------------------------------
+Tensor::Tensor(const std::vector<uint32_t>& shapes, float* external_ptr)
+    : m_shapes(shapes) 
+{
+    // 1. 计算总元素大小和步长 (复用之前的逻辑)
+    m_size = 1;
+    m_strides.resize(shapes.size());
+    
+    if (!shapes.empty()) {
+        // 计算步长 (Row-Major)
+        std::vector<uint32_t> temp_strides(shapes.size());
+        uint32_t running_stride = 1;
+        for (int i = shapes.size() - 1; i >= 0; --i) {
+            temp_strides[i] = running_stride;
+            running_stride *= shapes[i];
+        }
+        m_strides = temp_strides;
+        m_size = running_stride;
+    }
+
+    // 2. 关键点：使用自定义删除器
+    // "[](float* p) {}" 是一个空函数，意味着：
+    // 当 m_data 引用计数归零时，不要 delete p！因为这块内存是外面传进来的 workspace。
+    m_data = std::shared_ptr<float[]>(external_ptr, [](float* p) { 
+        // Do Nothing! 
+    });
+}
+
 void Tensor::show_meta() const {
     std::cout << "Tensor Meta Info:\n";
     std::cout << "  Shape: [";

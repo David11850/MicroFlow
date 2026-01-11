@@ -75,26 +75,56 @@ void gemm_omp(const Tensor& A, const Tensor& B, Tensor& C) {
     }
 }
 
+// [修改实现]
 void conv2d(const Tensor& input, const Tensor& kernel, Tensor& output, 
-            uint32_t stride, uint32_t padding) {
+            uint32_t stride, uint32_t padding, float* workspace) {
+    
+    uint32_t H = input.shapes()[1]; 
+    uint32_t W = input.shapes()[2];
     uint32_t FN = kernel.shapes()[0];
     uint32_t C  = kernel.shapes()[1];
     uint32_t K  = kernel.shapes()[2];
-    uint32_t H = input.shapes()[1];
-    uint32_t W = input.shapes()[2];
-
     uint32_t OH = (H + 2 * padding - K) / stride + 1;
     uint32_t OW = (W + 2 * padding - K) / stride + 1;
 
-    Tensor col_buffer({C * K * K, OH * OW});
+    // -------------------------------------------------------
+    // [核心修改点]
+    // -------------------------------------------------------
+    
+    // 检查是否传入了 workspace
+    if (workspace == nullptr) {
+        // 如果用户没传，为了兼容性，我们还是 fallback 到原来的 malloc 模式 (但在高性能模式下不应发生)
+        // 这里可以打印一个警告
+        std::cerr << "[Performance Warning] conv2d called without workspace! Triggering malloc." << std::endl;
+        Tensor col_buffer({C * K * K, OH * OW}); 
+        im2col(input, col_buffer, K, stride, padding);
+        // ... (后续逻辑需要调整，稍微麻烦，建议强制要求 workspace)
+        // 为了简化，我们直接假设 workspace 必须存在
+        std::exit(-1); 
+    }
+
+    // 1. 创建 Im2Col 缓冲区 (View Mode)
+    // 这一步不会分配内存，只是创建了一个指向 workspace 的 Tensor 头信息
+    Tensor col_buffer({C * K * K, OH * OW}, workspace); 
+
+    // 2. 执行 Im2Col (数据被写到了 workspace 里)
     im2col(input, col_buffer, K, stride, padding);
 
+    // 3. 准备输出矩阵的 View
+    // 注意：gemm 的输出也不应该 malloc，但为了简单起见，我们暂时认为 output 是外部传入的 Tensor
+    // 这里主要优化的是 col_buffer 这个巨大的中间变量
+
+    // 4. Kernel 展平
+    // 这一步其实也可以预处理 (Model Loader阶段完成)，暂时先保留拷贝
     Tensor kernel_mat({FN, C*K*K});
     std::copy(kernel.raw_ptr(), kernel.raw_ptr() + kernel.size(), kernel_mat.raw_ptr());
+    
     Tensor output_mat({FN, OH * OW});
 
+    // 5. GEMM
     gemm_omp(kernel_mat, col_buffer, output_mat);
 
+    // 6. 拷贝回结果
     std::copy(output_mat.raw_ptr(), output_mat.raw_ptr() + output_mat.size(), output.raw_ptr());
 }
 

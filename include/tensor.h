@@ -18,6 +18,10 @@ public:
     // 构造函数：创建一个全零的 Tensor
     explicit Tensor(const std::vector<uint32_t>& shapes);
 
+    // [新增] 构造函数：创建一个借用外部内存的 Tensor (View Mode)
+    // external_ptr: 指向早已分配好的显存/内存池
+    Tensor(const std::vector<uint32_t>& shapes, float* external_ptr);
+
     // 核心属性
     const std::vector<uint32_t>& shapes() const { return m_shapes; }
     const std::vector<uint32_t>& strides() const { return m_strides; }

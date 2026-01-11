@@ -14,13 +14,10 @@ void gemm_omp(const Tensor& A, const Tensor& B, Tensor& C);
 // Level 2: AVX2 SIMD (x86 专用优化)
 void gemm_avx(const Tensor& A, const Tensor& B, Tensor& C);
 
-
-// 卷积层: Im2Col + GEMM
-// input: [C, H, W]
-// kernel: [FN, C, K, K] (FN: 卷积核个数)
-// output: [FN, OH, OW]
+// [修改] 增加 workspace 参数
+// workspace: 指向一块足够大的临时内存 (C_in * K * K * H_out * W_out * sizeof(float))
 void conv2d(const Tensor& input, const Tensor& kernel, Tensor& output, 
-           uint32_t stride, uint32_t padding);
+            uint32_t stride, uint32_t padding, float* workspace = nullptr);
 
 // 激活函数: ReLU
 // In-place 操作：直接修改输入 Tensor
