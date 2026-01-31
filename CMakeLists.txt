@@ -14,7 +14,6 @@ find_package(OpenMP REQUIRED)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 # 1. 编译核心库
-# 注意：这里加入了 src/im2col.cpp
 add_library(microflow_core src/tensor.cpp src/ops.cpp src/im2col.cpp)
 target_link_libraries(microflow_core PUBLIC OpenMP::OpenMP_CXX)
 
