@@ -1,45 +1,44 @@
 # ==========================================
-# 阶段 1：编译环境 (Builder Stage)
+# 阶段 1：编译阶段 (Builder) - 负责交叉编译
 # ==========================================
 FROM docker.m.daocloud.io/library/debian:13-slim AS builder
 
-# 安装编译所需的完整工具链（针对 GCC 编译）
-RUN apt update && apt install -y \
-    build-essential \
-    cmake \
-    libgomp1 \
-    && rm -rf /var/lib/apt/lists/*
+# 安装编译所需的完整工具链(g++/cmake/openmp)
+RUN apt update && apt install -y build-essential cmake libgomp1
 
 WORKDIR /app
-
-# 只有在构建时才进行拷贝，避免宿主机 build 文件夹污染
+# 将当前目录所有文件拷贝进镜像
 COPY . .
 
-# 执行编译（在 ARM64 模拟环境下生成原生二进制）
-# 强制清理容器内可能存在的旧 build
-RUN rm -rf build && mkdir build && cd build && \
+# 内部执行 CMake 和 Make（生成 ARM64 二进制）
+RUN mkdir build && cd build && \
     cmake .. -DCMAKE_BUILD_TYPE=Release && \
-    make -j$(nproc)
+    make test_mnist_mock
+
+
+
 
 # ==========================================
-# 阶段 2：运行环境 (Runtime Stage)
+# 阶段 2：运行阶段 (Runtime) - 负责极简部署
 # ==========================================
 FROM docker.m.daocloud.io/library/debian:13-slim
 
-# 设置工作目录
-WORKDIR /root/microflow/
+# 只安装运行时必需的库
+RUN apt update && apt install -y libgomp1 && rm -rf /var/lib/apt/lists/*
 
-# 核心修正：安装与编译器匹配的 GNU OpenMP 运行时库
-RUN apt update && apt install -y \
-    libgomp1 \
-    && rm -rf /var/lib/apt/lists/*
+WORKDIR /root/microflow
 
-# 从编译阶段拷贝成品，不要拷贝整个项目，保持镜像轻量
+# 1. 从编译阶段拷贝最终的可执行文件
 COPY --from=builder /app/build/test_mnist_mock .
+
+# 2. 固化模型文件到镜像内部
 COPY --from=builder /app/model/ ./model/
 
-# 赋予执行权限
+# 3. 固化你生成的那个数字 7 的测试图片到镜像内部
+COPY --from=builder /app/tool/input.bin .
+
+# 赋予程序执行权限
 RUN chmod +x ./test_mnist_mock
 
-# 设置启动命令
+# 一键启动：不带任何参数默认运行推理
 ENTRYPOINT ["./test_mnist_mock"]

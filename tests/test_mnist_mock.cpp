@@ -17,7 +17,7 @@ int main() {
     std::cout << "========================================" << std::endl;
 
     // 1. 打开模型文件
-    std::ifstream model_file("mnist.mflow", std::ios::binary);
+    std::ifstream model_file("model/mnist.mflow", std::ios::binary);
     if (!model_file.is_open()) {
         std::cerr << "Error: Could not open mnist.mflow! File missing?" << std::endl;
         return -1;
