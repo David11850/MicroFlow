@@ -1,0 +1,25 @@
+# 排除所有的编译产物（最重要！）
+build/
+bin/
+lib/
+
+# 排除版本控制系统
+.git/
+.gitignore
+
+# 排除之前的 Docker 镜像包
+release/
+*.tar
+*.tar.gz
+
+# 排除 Python 缓存（如果你运行过 tool 里的脚本）
+**/__pycache__/
+*.pyc
+
+# 排除 IDE 配置
+.vscode/
+.idea/
+
+# 排除临时说明文档
+README.md
+LICENSE
