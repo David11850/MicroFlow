@@ -1,16 +1,1 @@
-# MicroFlow-V1
-1.what is the progress?--------we successfully run this engine in resperryPi4 using docker and stand_test and self-trained-model-weights
-                                ,which is not so precious.
-2.How to run this project in Pi4?------we have saved the docker image,stand_test,and weights file in the SD cards,which can be inserted 
-                                        into the Pi,or maybe we should change the original device to Pi4,so we can save much of time to 
-                                        adjust the par to fit for sepcific device.And when we enter the card system,here is the bash command
-                                        to run the project
-
-                                        cd/home/michael/code
-                                        docker run --rm \
-                                        -v $(pwd)/mnist.mflow:/root/microflow/model/mnist.mflow \
-                                        -v $(pwd)/standard_input.bin:/root/microflow/input.bin \
-                                        microflow-pi:pi4
-3.what does these command means?---------docker run ... is the command to run the docker image,and the -v is replace the original file in docker
-                                        image by outside file.In this command is the model-weight-file:mnist.mflow,and the 
-                                        test-file:standard_input.bin.So we can change the test-file and the weights-file by the -v command.
+# MicroFlow-V2_testing!!!!_can not run
