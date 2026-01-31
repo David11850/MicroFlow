@@ -52,9 +52,11 @@ int main() {
     model_file.read(reinterpret_cast<char*>(conv1_weight.raw_ptr()), 
                     conv1_weight.size() * sizeof(float));
 
-    // [关键修正]: 传入 workspace_ptr
+    // 传入 workspace_ptr
+    std::cout << "[Debug] Ready to run conv2d..." << std::endl;
     conv2d(input, conv1_weight, conv1_out, 1, 1, workspace_ptr);
     relu(conv1_out);
+    std::cout << "[Debug] Conv2d and ReLU finished!" << std::endl;
 
     Tensor pool1_out({8, 14, 14});
     max_pool2d(conv1_out, pool1_out, 2);
@@ -82,6 +84,19 @@ int main() {
         std::cout << out_data[i] << " ";
     }
     std::cout << std::endl;
+
+    // Argmax（求最大值索引）
+    std::cout << "========================================" << std::endl;
+    float max_val = out_data[0];
+    int predicted_digit = 0;
+    for(int i = 1; i < 10; ++i) {
+        if(out_data[i] > max_val) {
+            max_val = out_data[i];
+            predicted_digit = i;
+        }
+    }
+    std::cout << "Final Predicted Result: [ " << predicted_digit << " ]" << std::endl;
+    std::cout << "========================================" << std::endl;
 
     return 0;
 }

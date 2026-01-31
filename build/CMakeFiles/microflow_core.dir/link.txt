@@ -1,2 +1,0 @@
-/usr/bin/ar qc libmicroflow_core.a CMakeFiles/microflow_core.dir/src/tensor.cpp.o CMakeFiles/microflow_core.dir/src/ops.cpp.o CMakeFiles/microflow_core.dir/src/im2col.cpp.o
-/usr/bin/ranlib libmicroflow_core.a
