@@ -1,5 +1,5 @@
 # 阶段 1：编译环境 (Build Stage)
-FROM debian:13-slim AS builder
+FROM docker.m.daocloud.io/library/debian:13-slim AS builder
 
 # 安装编译所需的依赖
 RUN apt update && apt install -y \
@@ -20,7 +20,7 @@ RUN mkdir -p build && cd build && \
     make -j$(nproc)
 
 # 阶段 2：运行环境 (Runtime Stage)
-FROM debian:13-slim
+FROM docker.m.daocloud.io/library/debian:13-slim
 
 # 只安装运行所需的运行时库（OpenMP）
 RUN apt update && apt install -y \
