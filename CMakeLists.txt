@@ -4,9 +4,15 @@ project(MicroFlow)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 开启原生架构优化 (自动识别你的 CPU 支持 AVX2/FMA 等指令)
-# 注意：在之后的交叉编译环节，这行需要删掉或改为 ARM 专用参数
-add_compile_options(-O3 -march=native)
+# 开启原生架构优化,针对树莓派 4 (Cortex-A72) 进行精准优化
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+    # -O3: 激进优化
+    # -mcpu=cortex-a72: 告诉编译器这是树莓派 4 的心脏
+    # -ftree-vectorize: 强制开启自动向量化（利用 NEON 指令集）
+    add_compile_options(-O3 -mcpu=cortex-a72 -ftree-vectorize)
+else()
+    add_compile_options(-O3)
+endif()
 
 # 寻找 OpenMP (Level 1 优化必须)
 find_package(OpenMP REQUIRED)
