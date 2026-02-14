@@ -10,6 +10,8 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
     # -mcpu=cortex-a72: 告诉编译器这是树莓派 4 的心脏
     # -ftree-vectorize: 强制开启自动向量化（利用 NEON 指令集）
     add_compile_options(-O3 -mcpu=cortex-a72 -ftree-vectorize)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+    add_compile_options(-O3 -mavx2 -mfma)
 else()
     add_compile_options(-O3)
 endif()
@@ -20,7 +22,7 @@ find_package(OpenMP REQUIRED)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 # 1. 编译核心库
-add_library(microflow_core src/tensor.cpp src/ops.cpp src/im2col.cpp)
+add_library(microflow_core src/tensor.cpp src/ops.cpp src/im2col.cpp src/llm_engine.cpp)
 target_link_libraries(microflow_core PUBLIC OpenMP::OpenMP_CXX)
 
 # 2. 之前的测试
@@ -39,3 +41,5 @@ target_link_libraries(test_conv microflow_core)
 
 add_executable(test_mnist_mock tests/test_mnist_mock.cpp)
 target_link_libraries(test_mnist_mock microflow_core)
+add_executable(test_llm_engine tests/test_llm_engine.cpp)
+target_link_libraries(test_llm_engine microflow_core)
