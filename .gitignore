@@ -38,3 +38,6 @@ Thumbs.db             # 排除 Windows 缩略图缓存
 # 5. 持续集成与工具 (Other)
 # ==========================================
 compile_commands.json # 排除 Clangd 索引文件
+
+__pycache__/
+*.pyc
